@@ -39,6 +39,7 @@ const resetPassword = async (req, res) => {
     }
 
     try {
+        //Busca o usuario pelo token e verifica se o token ainda válido.
         const user = await User.findOne({
             resetPasswordToken: token,
             resetPasswordExpires: {$gt: Date.now()},
@@ -50,8 +51,8 @@ const resetPassword = async (req, res) => {
 
         //Hasheando a nova senha antes de salvar
         const hashedPassword = await bcrypt.hash(password, 10);
-        user.password = hashedPassword;
-        user.resetPasswordToken = undefined;
+        user.password = hashedPassword;  //Salva a nova senha já hasheada no banco
+        user.resetPasswordToken = undefined;  //Define novamente os valores de recuperação de senha para undefined
         user.resetPasswordExpires = undefined;
 
         await userRoutes.save();

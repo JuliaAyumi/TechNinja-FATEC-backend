@@ -3,21 +3,27 @@
 import { text } from 'express';
 import nodemailer from 'nodemailer';
 
+//Criando um transportador
 const transporter = nodemailer.createTransport({
     service: 'gmail',  //Pode adicionar outros serviços de emial
+    port: 587,
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,   //Email do usuario
         pass: process.env.EMAIL_PASS,  //Senha do usuario
     },
 });
 
+
 const sendPasswordResetEmail = (email, token) => {
-    const url = `http://localhost:3000/reset-password/${token}`;
+    const url = `http://localhost:3000/reset-password/${token}`;   //URL que vai ser mandanda por email. Já manda a URL com o token
+    //Configuração da mensagem do email
     const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Redefinição de Senha',
-        text: `Você solicitou a redefinição de senha. Clique no link para redefinir: ${url}`,
+        from: process.env.EMAIL_USER,   //Remetente
+        to: email,   //Destinatario
+        subject: 'Redefinição de Senha', //Assunto do email  
+        text: `Olá! Você solicitou a redefinição de senha. Clique no link para redefinir: ${url}`,  //Texto do email
+        html: '<b>Olá Você solicitou a redefinição de senha. Clique no link para redefinir:</b> '
     };
 
     return transporter.sendMail(mailOptions);
