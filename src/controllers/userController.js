@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import userRoutes from "../routes/userRoutes.js";
 import sendPasswordResetEmail from '../services/emailService.js'
 
-const requestPasswordReset = async (req, res) => {
+export const requestPasswordReset = async (req, res) => {
     const {email} = req.body;
 
     try{
@@ -29,7 +29,7 @@ const requestPasswordReset = async (req, res) => {
 };
 
 //Função para redefinir a senha
-const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
     const {token} = req.params;
     const {password} = req.body;
 
@@ -63,4 +63,4 @@ const resetPassword = async (req, res) => {
 };
 
 
-export default requestPasswordReset;
+// export default {requestPasswordReset, resetPassword};

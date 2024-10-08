@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 
 const sendPasswordResetEmail = (email, token) => {
-    const url = `http://localhost:3000/reset-password/${token}`;   //URL que vai ser mandanda por email. Já manda a URL com o token
+    const url = `https://techninjafrontend-1acbc255353f.herokuapp.com/recuperar${token}`;   //URL que vai ser mandanda por email. Já manda a URL com o token
     //Configuração da mensagem do email
     const mailOptions = {
         from: process.env.EMAIL_USER,   //Remetente
