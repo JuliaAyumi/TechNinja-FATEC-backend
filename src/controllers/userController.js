@@ -24,7 +24,9 @@ export const requestPasswordReset = async (req, res) => {
         await sendPasswordResetEmail(email, token);
         res.status(200).json({message: 'E-mail de recuperação enviado'});
     } catch (error) {
-        res.status(500).json({message: 'Erro ao enviar e-mail'});
+        //res.status(500).json({message: 'Erro ao enviar e-mail'});
+        res.status(500).json({message: error})
+        
     }
 };
 
@@ -55,8 +57,9 @@ export const resetPassword = async (req, res) => {
         user.resetPasswordToken = undefined;  //Define novamente os valores de recuperação de senha para undefined
         user.resetPasswordExpires = undefined;
 
-        await userRoutes.save();
+        
         res.status(200).json({message: 'Senha redefinida com sucesso'});
+        await user.save()
     } catch (error) {
         res.status(500).json({message: 'Erro ao redefinir a senha'});
     }
