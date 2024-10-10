@@ -17,8 +17,7 @@ export const requestPasswordReset = async (req, res) => {
         //Gera um token e define um tempo de expiração
         const token = crypto.randomBytes(32).toString('hex');
         user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000;  //Define a expiração do token para até 1 hora
-
+        user.resetPasswordExpires = new Date(Date.now() + 3600000);  //Define a expiração do token para até 1 hora
         await user.save();
 
         await sendPasswordResetEmail(email, token);
@@ -35,6 +34,9 @@ export const resetPassword = async (req, res) => {
     const {token} = req.params;
     const {password} = req.body;
 
+    const cleanToken = token.replace(/:/g, '');
+
+
     //Verifica se a senha foi inserida
     if(!password){
         return res.status(400).json({message: 'Nova senha é obrigatório'});
@@ -43,23 +45,24 @@ export const resetPassword = async (req, res) => {
     try {
         //Busca o usuario pelo token e verifica se o token ainda válido.
         const user = await User.findOne({
-            resetPasswordToken: token,
-            resetPasswordExpires: {$gt: Date.now()},
+            resetPasswordToken: cleanToken,
+            resetPasswordExpires: {$gt: new Date(Date.now())},
         });
+
 
         if (!user){
             return res.status(400).json({message: 'Token inválido ou expirado'});
+            
         }
 
         //Hasheando a nova senha antes de salvar
         const hashedPassword = await bcrypt.hash(password, 10);
-        user.password = hashedPassword;  //Salva a nova senha já hasheada no banco
+        user.senha = hashedPassword;  //Salva a nova senha já hasheada no banco
         user.resetPasswordToken = undefined;  //Define novamente os valores de recuperação de senha para undefined
         user.resetPasswordExpires = undefined;
-
         
         res.status(200).json({message: 'Senha redefinida com sucesso'});
-        await user.save()
+        await user.save();
     } catch (error) {
         res.status(500).json({message: 'Erro ao redefinir a senha'});
     }
