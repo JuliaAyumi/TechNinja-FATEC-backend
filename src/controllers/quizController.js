@@ -63,3 +63,45 @@ export const updateScore = async (req, res) => {
     res.status(500).json({ message: "Erro ao atualizar a pontuação" });
   }
 };
+
+// Controlador para marcar quiz como completado
+export const markQuizCompleted = async (req, res) => {
+  const { area, topico } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const quizId = `${area}-${topico}`;
+    if (!user.quizzesCompletados.includes(quizId)) {
+      user.quizzesCompletados.push(quizId);
+      await user.save();
+    }
+
+    res.status(200).json({ message: "Quiz marcado como completado" });
+  } catch (error) {
+    console.error("Erro ao marcar quiz como completado:", error);
+    res.status(500).json({ message: "Erro ao marcar quiz como completado" });
+  }
+};
+
+export const getCompletedQuizzes = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findById(userId).select("quizzesCompletados");
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    res.status(200).json({ quizzesCompletados: user.quizzesCompletados || [] });
+  } catch (error) {
+    console.error("Erro ao buscar quizzes completados:", error);
+    res.status(500).json({ message: "Erro ao buscar quizzes completados" });
+  }
+};

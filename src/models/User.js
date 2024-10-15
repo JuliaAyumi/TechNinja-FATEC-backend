@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     ranking: { type: String, default: "" },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+    quizzesCompletados: { type: [String], default: [] },
   },
   { collection: "Usuarios" }
 );
