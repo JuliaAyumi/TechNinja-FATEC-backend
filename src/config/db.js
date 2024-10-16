@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 const connectDB = async () => {
+  dotenv.config();
+
   try {
     await mongoose.connect(
-      ""
+      process.env.MONGO_URL
     );
     console.log("Conectado ao MongoDB Atlas");
   } catch (error) {
