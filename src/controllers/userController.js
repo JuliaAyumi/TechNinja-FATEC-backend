@@ -4,6 +4,8 @@ import User from '../models/User.js';
 import crypto from 'crypto';
 import userRoutes from "../routes/userRoutes.js";
 import sendPasswordResetEmail from '../services/emailService.js'
+import getUserById from "../services/userService.js";
+
 
 export const requestPasswordReset = async (req, res) => {
     const {email} = req.body;
@@ -67,6 +69,31 @@ export const resetPassword = async (req, res) => {
         res.status(500).json({message: 'Erro ao redefinir a senha'});
     }
 };
+
+// Função para o endpoint de busca de usuário
+export const getUser = async (req, res) => {
+    const { id } = req.params; // Pega o ID do usuário da URL
+    try {
+        // Verifica se o ID no token corresponde ao ID na URL
+        if (req.user !== id) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
+        // Chama a função do userService
+        const user = await getUserById(id); 
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
+
+        return res.status(200).json(user); // Retorna o usuário encontrado
+    } catch (error) {
+        console.error(error); // Log do erro para depuração
+        return res.status(500).json({ message: 'Erro ao buscar usuário', error: error.message });
+    }
+};
+
+
 
 
 // export default {requestPasswordReset, resetPassword};
