@@ -4,7 +4,8 @@ import User from '../models/User.js';
 import crypto from 'crypto';
 import userRoutes from "../routes/userRoutes.js";
 import sendPasswordResetEmail from '../services/emailService.js'
-import getUserById from "../services/userService.js";
+import { getUserById } from '../services/userService.js';
+import { updateUser } from '../services/userService.js';
 
 
 export const requestPasswordReset = async (req, res) => {
@@ -90,6 +91,19 @@ export const getUser = async (req, res) => {
     } catch (error) {
         console.error(error); // Log do erro para depuração
         return res.status(500).json({ message: 'Erro ao buscar usuário', error: error.message });
+    }
+};
+
+//Função para atualizar dados do usuario
+export const updateUserController = async (req, res) => {
+    const userId = req.params.id; // Obtém o ID do usuário da URL
+    const updateData = req.body; // Obtém os dados a serem atualizados do corpo da requisição
+
+    try {
+        const updatedUser = await updateUser(userId, updateData);
+        res.status(200).json(updatedUser); // Retorna o usuário atualizado
+    } catch (error) {
+        res.status(400).json({ message: error.message }); // Retorna um erro se houver
     }
 };
 
