@@ -1,15 +1,20 @@
 import User from "../models/User.js";
 import {
-  obterPerguntas,
-  obterTopicosPorArea,
+  obterDificuldadePorSubtema,
+  obterPerguntasPorSubtemaDificuldade,
+  obterTemasPorArea,
 } from "../services/quizService.js";
 
 // Controlador para buscar perguntas por área e tópico
 export const getQuizQuestions = async (req, res) => {
-  const { area, topico } = req.params;
+  const { tema, subtema, dificuldade } = req.params;
 
   try {
-    const perguntas = await obterPerguntas(area, topico);
+    const perguntas = await obterPerguntasPorSubtemaDificuldade(
+      tema,
+      subtema,
+      dificuldade
+    );
 
     res.json(perguntas);
   } catch (error) {
@@ -18,21 +23,58 @@ export const getQuizQuestions = async (req, res) => {
   }
 };
 
-// Controlador para buscar tópicos por área
-export const getTopicosPorArea = async (req, res) => {
+// Controlador para buscar subtemas por área
+export const getTemasPorArea = async (req, res) => {
   const { area } = req.params;
 
   try {
-    const topicos = await obterTopicosPorArea(area);
+    const subtemas = await obterTemasPorArea(area);
 
-    if (topicos.length === 0) {
-      return res.status(404).json({ message: "Nenhum tópico encontrado" });
+    if (subtemas.length === 0) {
+      return res.status(404).json({ message: "Nenhum subtema encontrado" });
     }
 
-    res.json(topicos);
+    res.json(subtemas);
   } catch (error) {
-    console.error("Erro ao buscar tópicos:", error);
-    res.status(500).json({ message: "Erro ao buscar tópicos" });
+    console.error("Erro ao buscar subtemas:", error);
+    res.status(500).json({ message: "Erro ao buscar subtemas" });
+  }
+};
+
+// Controlador para buscar dificuldades por subtema
+export const getDificuldadesPorSubtema = async (req, res) => {
+  const { tema, subtema } = req.params;
+
+  try {
+    const dificuldades = await obterDificuldadePorSubtema(tema, subtema);
+
+    if (dificuldades.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Nenhuma dificuldade encontrada" });
+    }
+
+    res.json(dificuldades);
+  } catch (error) {
+    console.error("Erro ao buscar dificuldades:", error);
+    res.status(500).json({ message: "Erro ao buscar dificuldades" });
+  }
+};
+
+export const getPerguntasPorDificuldadeSubtema = async (req, res) => {
+  const { tema, subtema, dificuldade } = req.params;
+
+  try {
+    const perguntas = await getQuizQuestions(tema, subtema, dificuldade);
+
+    if (perguntas.length === 0) {
+      return res.status(404).json({ message: "Nenhuma pergunta encontrada" });
+    }
+
+    res.json(perguntas);
+  } catch (error) {
+    console.error("Erro ao buscar perguntas:", error);
+    res.status(500).json({ message: "Erro ao buscar perguntas" });
   }
 };
 

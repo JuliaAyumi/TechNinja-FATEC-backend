@@ -7,8 +7,9 @@ const alternativaSchema = new mongoose.Schema({
 
 const perguntaSchema = new mongoose.Schema(
   {
-    area: { type: String, required: true },
+    tema: { type: String, required: true },
     topico: { type: String, required: true },
+    subtema: { type: String, required: true },
     dificuldade: { type: String, required: true },
     pergunta: { type: String, required: true },
     alternativas: { type: [alternativaSchema], required: true },

@@ -1,8 +1,12 @@
 import Pergunta from "../models/Questions.js";
 
-export const obterPerguntas = async (area, topico) => {
+export const obterPerguntasPorSubtemaDificuldade = async (
+  tema,
+  subtema,
+  dificuldade
+) => {
   try {
-    const perguntas = await Pergunta.find({ area, topico });
+    const perguntas = await Pergunta.find({ tema, subtema, dificuldade });
 
     // Embaralhar as perguntas
     perguntas.sort(() => 0.5 - Math.random());
@@ -13,13 +17,22 @@ export const obterPerguntas = async (area, topico) => {
   }
 };
 
-export const obterTopicosPorArea = async (area) => {
+export const obterTemasPorArea = async (tema) => {
   try {
-    const topicos = await Pergunta.find({ area })
-      .select("topico")
-      .distinct("topico");
-    return topicos;
+    const temas = await Pergunta.find({ tema }).distinct("subtema"); // Remove duplicatas
+    return temas;
   } catch (error) {
-    throw new Error("Erro ao obter tópicos");
+    throw new Error("Erro ao obter temas");
+  }
+};
+
+export const obterDificuldadePorSubtema = async (tema, subtema) => {
+  try {
+    const dificuldades = await Pergunta.find({ tema, subtema }).distinct(
+      "dificuldade"
+    );
+    return dificuldades;
+  } catch (error) {
+    throw new Error("Erro ao obter dificuldades");
   }
 };
