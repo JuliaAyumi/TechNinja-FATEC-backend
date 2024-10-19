@@ -61,27 +61,10 @@ export const getDificuldadesPorSubtema = async (req, res) => {
   }
 };
 
-export const getPerguntasPorDificuldadeSubtema = async (req, res) => {
-  const { tema, subtema, dificuldade } = req.params;
-
-  try {
-    const perguntas = await getQuizQuestions(tema, subtema, dificuldade);
-
-    if (perguntas.length === 0) {
-      return res.status(404).json({ message: "Nenhuma pergunta encontrada" });
-    }
-
-    res.json(perguntas);
-  } catch (error) {
-    console.error("Erro ao buscar perguntas:", error);
-    res.status(500).json({ message: "Erro ao buscar perguntas" });
-  }
-};
-
 // Atualizar a pontuação do usuário
 export const updateScore = async (req, res) => {
   const { points } = req.body;
-  const userId = req.user.id;
+  const userId = req.user;
 
   try {
     const user = await User.findById(userId);
@@ -90,11 +73,9 @@ export const updateScore = async (req, res) => {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
-    // Atualizar a pontuação
     const newScore = parseInt(user.pontuacao || "0") + points;
     user.pontuacao = newScore;
 
-    // Salvar o usuário com a nova pontuação
     await user.save();
 
     res
@@ -108,8 +89,8 @@ export const updateScore = async (req, res) => {
 
 // Controlador para marcar quiz como completado
 export const markQuizCompleted = async (req, res) => {
-  const { area, topico } = req.body;
-  const userId = req.user.id;
+  const { area, subtema, dificuldade } = req.body;
+  const userId = req.user;
 
   try {
     const user = await User.findById(userId);
@@ -118,7 +99,7 @@ export const markQuizCompleted = async (req, res) => {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
-    const quizId = `${area}-${topico}`;
+    const quizId = `${area}-${subtema}-${dificuldade}`;
     if (!user.quizzesCompletados.includes(quizId)) {
       user.quizzesCompletados.push(quizId);
       await user.save();
@@ -132,7 +113,7 @@ export const markQuizCompleted = async (req, res) => {
 };
 
 export const getCompletedQuizzes = async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user;
 
   try {
     const user = await User.findById(userId).select("quizzesCompletados");

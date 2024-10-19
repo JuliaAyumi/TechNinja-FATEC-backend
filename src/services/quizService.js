@@ -19,7 +19,7 @@ export const obterPerguntasPorSubtemaDificuldade = async (
 
 export const obterTemasPorArea = async (tema) => {
   try {
-    const temas = await Pergunta.find({ tema }).distinct("subtema"); // Remove duplicatas
+    const temas = await Pergunta.find({ tema }).distinct("subtema");
     return temas;
   } catch (error) {
     throw new Error("Erro ao obter temas");
