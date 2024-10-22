@@ -99,6 +99,13 @@ export const updateUserController = async (req, res) => {
     const userId = req.params.id; // Obtém o ID do usuário da URL
     const updateData = req.body; // Obtém os dados a serem atualizados do corpo da requisição
 
+    // Validação dos campos obrigatórios (sem senha)
+    if (!updateData.nome || !updateData.email) {
+        return res.status(400).json({ message: "Nome e email são obrigatórios para a atualização." });
+    }
+
+    console.log(updateData)
+
     try {
         const updatedUser = await updateUser(userId, updateData);
         res.status(200).json(updatedUser); // Retorna o usuário atualizado

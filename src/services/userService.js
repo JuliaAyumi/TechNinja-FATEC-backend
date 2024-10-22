@@ -15,39 +15,38 @@ export const getUserById = async (id) => {
 
 export const updateUser = async (id, updateData) => {
     try {
-        // Busca o usuário atual para comparar os dados
         const user = await User.findById(id);
         if (!user) {
             throw new Error('Usuário não encontrado');
         }
 
-        // Cria um objeto para armazenar os dados a serem atualizados
         const updates = {};
+        
+        // Se a senha for fornecida, compará-la
+        if (updateData.senha) {
+            const isMatch = await bcrypt.compare(updateData.senha, user.senha);
+            if (!isMatch) {
+                const salt = await bcrypt.genSalt(10);
+                updates.senha = await bcrypt.hash(updateData.senha, salt);
+            }
+        }
 
-        const isMatch = await bcrypt.compare(updateData.senha, user.senha)
-
-        // Verifica cada campo que pode ser atualizado
+        // Atualiza nome e email se foram fornecidos e mudaram
         if (updateData.nome && updateData.nome !== user.nome) {
-            updates.nome = updateData.nome;
+            updates.nome = updateData.nome.trim(); // Remover espaços
         }
 
         if (updateData.email && updateData.email !== user.email) {
-            updates.email = updateData.email;
+            updates.email = updateData.email.trim(); // Remover espaços
         }
 
-        if (isMatch == false) {
-            // Hasheia a nova senha se for fornecida
-            const salt = await bcrypt.genSalt(10);
-            updates.senha = await bcrypt.hash(updateData.senha, salt);
-        }
-
-        // Se houver atualizações, aplica as mudanças
+        // Aplicar atualizações
         if (Object.keys(updates).length > 0) {
             const updatedUser = await User.findByIdAndUpdate(id, updates, {
                 new: true,
                 runValidators: true,
             });
-            return updatedUser; // Retorna o usuário atualizado
+            return updatedUser;
         }
 
         return user; // Retorna o usuário original se não houver atualizações
@@ -56,4 +55,3 @@ export const updateUser = async (id, updateData) => {
     }
 };
 
-;
