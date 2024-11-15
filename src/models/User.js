@@ -4,9 +4,7 @@ const userSchema = new mongoose.Schema(
   {
     nome: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    matricula: { type: String, default: "" },
     senha: { type: String, required: true },
-    usuario: { type: String, default: "" },
     avatar: { type: String, default: "" },
     pontuacao: { type: String, default: "" },
     nivelmodulo: { type: String, default: "" },
