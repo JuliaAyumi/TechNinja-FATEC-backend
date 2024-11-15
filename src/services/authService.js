@@ -17,8 +17,6 @@ export const registerUser = async (nome, email, senha) => {
     avatar: base64URL,
   });
 
-  console.log(newUser)
-
   await newUser.save();
   return newUser;
 };

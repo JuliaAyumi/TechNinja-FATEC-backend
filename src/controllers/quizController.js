@@ -61,6 +61,24 @@ export const getDificuldadesPorSubtema = async (req, res) => {
   }
 };
 
+// Controlador para buscar quizzes completados
+export const getCompletedQuizzes = async (req, res) => {
+  const userId = req.user;
+
+  try {
+    const user = await User.findById(userId).select("quizzesCompletados");
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    res.status(200).json({ quizzesCompletados: user.quizzesCompletados || [] });
+  } catch (error) {
+    console.error("Erro ao buscar quizzes completados:", error);
+    res.status(500).json({ message: "Erro ao buscar quizzes completados" });
+  }
+};
+
 // Atualizar a pontuação do usuário
 export const updateScore = async (req, res) => {
   const { points } = req.body;
@@ -109,22 +127,5 @@ export const markQuizCompleted = async (req, res) => {
   } catch (error) {
     console.error("Erro ao marcar quiz como completado:", error);
     res.status(500).json({ message: "Erro ao marcar quiz como completado" });
-  }
-};
-
-export const getCompletedQuizzes = async (req, res) => {
-  const userId = req.user;
-
-  try {
-    const user = await User.findById(userId).select("quizzesCompletados");
-
-    if (!user) {
-      return res.status(404).json({ message: "Usuário não encontrado" });
-    }
-
-    res.status(200).json({ quizzesCompletados: user.quizzesCompletados || [] });
-  } catch (error) {
-    console.error("Erro ao buscar quizzes completados:", error);
-    res.status(500).json({ message: "Erro ao buscar quizzes completados" });
   }
 };

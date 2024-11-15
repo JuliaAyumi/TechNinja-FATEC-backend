@@ -8,7 +8,6 @@ export const obterPerguntasPorSubtemaDificuldade = async (
   try {
     const perguntas = await Pergunta.find({ tema, subtema, dificuldade });
 
-    // Embaralhar as perguntas
     perguntas.sort(() => 0.5 - Math.random());
 
     return perguntas;
