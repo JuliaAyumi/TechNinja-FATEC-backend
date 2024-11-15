@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { base64URL } from "../utils/base64URL.js";
 
 export const registerUser = async (nome, email, senha) => {
   const userExists = await User.findOne({ email });
@@ -13,7 +14,10 @@ export const registerUser = async (nome, email, senha) => {
     nome,
     email,
     senha: hashedPassword,
+    avatar: base64URL,
   });
+
+  console.log(newUser)
 
   await newUser.save();
   return newUser;
