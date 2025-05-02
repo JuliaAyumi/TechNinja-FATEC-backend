@@ -15,6 +15,7 @@ export const registerUser = async (nome, email, senha) => {
     email,
     senha: hashedPassword,
     avatar: base64URL,
+    pontuacao: 0,
   });
 
   await newUser.save();
