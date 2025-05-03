@@ -1,9 +1,8 @@
 import bcrypt from "bcryptjs";
-import User from "../models/User.js";
 import crypto from "crypto";
+import User from "../models/User.js";
 import sendPasswordResetEmail from "../services/emailService.js";
-import { getUserById } from "../services/userService.js";
-import { updateUser } from "../services/userService.js";
+import { getUserById, updateUser } from "../services/userService.js";
 
 export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
@@ -84,10 +83,13 @@ export const updateUserController = async (req, res) => {
   const userId = req.params.id;
   const updateData = req.body;
 
-  if (!updateData.nome || !updateData.email) {
+  if (
+    (updateData.nome !== undefined && updateData.nome.trim() === "") ||
+    (updateData.email !== undefined && updateData.email.trim() === "")
+  ) {
     return res
       .status(400)
-      .json({ message: "Nome e email são obrigatórios para a atualização." });
+      .json({ message: "Nome e email não podem ser vazios." });
   }
 
   try {
