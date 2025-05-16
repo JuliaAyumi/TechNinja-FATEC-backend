@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import User from "../models/User.js";
 import sendPasswordResetEmail from "../services/emailService.js";
-import { getUserById, updateUser } from "../services/userService.js";
+import { getUserById, updateUser, getTopUsers } from "../services/userService.js";
 
 export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
@@ -99,3 +99,13 @@ export const updateUserController = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const getTopUsersController = async (req, res) => {
+  try {
+    // Chama o UserService para buscar os 7 maiores usuários
+    const topUsers = await getTopUsers();
+    res.status(200).json(topUsers); // Retorna a lista dos 7 maiores usuários
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     senha: { type: String, required: true },
     avatar: { type: String, default: "" },
-    pontuacao: { type: String, default: "" },
+    pontuacao: { type: Number, default: 0 },
     nivelmodulo: { type: String, default: "" },
     ranking: { type: String, default: "" },
     resetPasswordToken: String,

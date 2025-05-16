@@ -52,3 +52,28 @@ export const updateUser = async (id, updateData) => {
     throw new Error(`Erro ao atualizar usuário: ${error.message}`);
   }
 };
+
+export const getTopUsers = async() => {
+  try {
+    // Buscando os 7 maiores usuários, ordenando pela pontuação de forma decrescente
+    const topUsers = await User.find()
+      .sort({ pontuacao: -1 })  // Ordenando por pontuacao em ordem decrescente
+      .limit(7)                // Limitando a 7 usuários
+      .select('nome pontuacao avatar ranking');
+
+      // Atualizar o campo "ranking" com base na posição
+    for (let i = 0; i < topUsers.length; i++) {
+      const user = topUsers[i];
+      const posicao = i + 1; // ranking começa do 1
+
+      await User.updateOne(
+        { _id: user._id },
+        { $set: { ranking: posicao } }
+      );
+    }
+
+    return topUsers; // Retorna os 7 maiores usuários
+  } catch (error) {
+    throw new Error(`Erro ao buscar os 7 maiores usuários: ${error.message}`);
+  }
+}
