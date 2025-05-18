@@ -18,8 +18,30 @@ export const obterPerguntasPorSubtemaDificuldade = async (
 
 export const obterTemasPorArea = async (tema) => {
   try {
-    const temas = await Pergunta.find({ tema }).distinct("subtema");
-    return temas;
+    const subtemas = await Pergunta.find({ tema }).distinct("subtema");
+
+    const temasComPontos = await Promise.all(
+      subtemas.map(async (subtema) => {
+        const perguntas = await Pergunta.find({ tema, subtema });
+
+        const pontosTotais = perguntas.reduce((total, pergunta) => {
+          switch (pergunta.dificuldade) {
+            case "facil":
+              return total + 1;
+            case "medio":
+              return total + 5;
+            case "dificil":
+              return total + 10;
+            default:
+              return total;
+          }
+        }, 0);
+
+        return { subtema, pontos: pontosTotais };
+      })
+    );
+
+    return temasComPontos;
   } catch (error) {
     throw new Error("Erro ao obter temas");
   }
