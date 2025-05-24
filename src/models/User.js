@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     quizzesCompletados: { type: [String], default: [] },
+    badges: { type: [String], default: [] }
   },
   { collection: "Usuarios" }
 );
