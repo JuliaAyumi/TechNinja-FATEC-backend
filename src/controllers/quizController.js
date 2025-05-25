@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { checkAndAssignBadges } from "../services/badgeService.js";
 import {
   obterDificuldadePorSubtema,
   obterPerguntasPorSubtemaDificuldade,
@@ -81,7 +82,7 @@ export const getCompletedQuizzes = async (req, res) => {
 
 // Atualizar a pontuação do usuário
 export const updateScore = async (req, res) => {
-  const { points } = req.body;
+  const { points, subtema, tema, dificuldade, isPerfect } = req.body;
   const userId = req.user;
 
   try {
@@ -96,6 +97,10 @@ export const updateScore = async (req, res) => {
 
     await user.save();
 
+    const quizId = `${tema}-${subtema}-${dificuldade}`;
+
+    await checkAndAssignBadges(userId, { quizSubtema: quizId, isPerfect });
+
     res
       .status(200)
       .json({ message: "Pontuação atualizada com sucesso", newScore });
@@ -107,7 +112,7 @@ export const updateScore = async (req, res) => {
 
 // Controlador para marcar quiz como completado
 export const markQuizCompleted = async (req, res) => {
-  const { area, subtema, dificuldade } = req.body;
+  const { area, subtema, dificuldade, isPerfect } = req.body;
   const userId = req.user;
 
   try {
@@ -118,12 +123,33 @@ export const markQuizCompleted = async (req, res) => {
     }
 
     const quizId = `${area}-${subtema}-${dificuldade}`;
+    let newBadge = null;
+
     if (!user.quizzesCompletados.includes(quizId)) {
       user.quizzesCompletados.push(quizId);
-      await user.save();
     }
 
-    res.status(200).json({ message: "Quiz marcado como completado" });
+    const badgeId = `primeiro_quiz_${area}`;
+    const perfectQuizBadgeId = "quiz_perfeito";
+    const badgeAlreadyExists = user.badges.includes(badgeId);
+    const perfectQuizBadgeAlreadyExists = user.badges.includes(perfectQuizBadgeId);
+
+    if (!badgeAlreadyExists) {
+      user.badges.push(badgeId);
+      newBadge = badgeId;
+    }
+
+    if (isPerfect && !perfectQuizBadgeAlreadyExists) {
+      user.badges.push(perfectQuizBadgeId);
+      newBadge = perfectQuizBadgeId;
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Quiz marcado como completado",
+      newBadge,
+    });
   } catch (error) {
     console.error("Erro ao marcar quiz como completado:", error);
     res.status(500).json({ message: "Erro ao marcar quiz como completado" });

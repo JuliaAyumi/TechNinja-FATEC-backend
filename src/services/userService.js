@@ -1,5 +1,6 @@
-import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+import { checkAndAssignBadges } from "../services/badgeService.js";
 
 export const getUserById = async (id) => {
   try {
@@ -44,6 +45,9 @@ export const updateUser = async (id, updateData) => {
         new: true,
         runValidators: true,
       });
+      
+      await checkAndAssignBadges(id, { checkAvatarBadge: true });
+      
       return updatedUser;
     }
 
