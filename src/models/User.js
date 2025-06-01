@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     quizzesCompletados: { type: [String], default: [] },
-    badges: { type: [String], default: [] }
+    badges: { type: [String], default: [] },
+    secret: {type: String, default: null} //armazena codigo de validação 2FA
   },
   { collection: "Usuarios" }
 );
