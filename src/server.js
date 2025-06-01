@@ -1,12 +1,15 @@
-import cors from "cors";
 import dotenv from "dotenv";
+import cors from "cors";
 import express from "express";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import totpRoutes from "./routes/2FARoutes.js";
+import * as totpCrypto from './utils/2FACrypto.js';
 
 dotenv.config();
+totpCrypto.setCryptoKey(process.env.CRYPTO_SECRET);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +25,7 @@ connectDB();
 app.use("/api", authRoutes);
 app.use("/api", quizRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api", totpRoutes);
 
 // Inicializar o servidor
 app.listen(PORT, () => {
