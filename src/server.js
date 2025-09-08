@@ -27,7 +27,14 @@ app.use("/api", quizRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api", totpRoutes);
 
+// Função auxiliar para mostrar data/hora formatada
+function logTime(message) {
+  const now = new Date();
+  console.log(`[${now.toLocaleString()}] ${message}`);
+}
+
 // Inicializar o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando em ${process.env.NODE_ENV === 'production' ? `https://techninjabackend-d9ff0d7afc03.herokuapp.com` : `http://localhost:${PORT}`}`);
+  logTime('hora atual')
 });

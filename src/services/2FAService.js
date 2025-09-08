@@ -4,7 +4,7 @@ import User from '../models/User.js';
 
 authenticator.options = {
   step: 30,         // tempo de expiração do token (em segundos)
-  window: [4, 4],   // tolera ate 160s(30*4) de diferença entre relogio servidor e relogio celular
+  window: [6, 6],   // tolera ate 180s(30*6) de diferença entre relogio servidor e relogio celular
 };
 
 export const generateSecret = async (email) => {
