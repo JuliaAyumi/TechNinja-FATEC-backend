@@ -1,4 +1,4 @@
-import { generateSecret, verifyToken } from '../services/2FAService.js';
+import { generateSecret, verifyToken } from '../services/twoFactorAuthService.js';
 
 export const handleGenerateSecret = async (req, res) => {
   try {

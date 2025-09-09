@@ -1,5 +1,5 @@
 import express from "express";
-import { handleGenerateSecret, handleVerifyToken } from "../controllers/2FAController.js";
+import { handleGenerateSecret, handleVerifyToken } from "../controllers/twoFactorAuthController.js";
 
 const router = express.Router();
 

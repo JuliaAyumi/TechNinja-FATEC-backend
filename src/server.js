@@ -5,8 +5,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import totpRoutes from "./routes/2FARoutes.js";
-import * as totpCrypto from './utils/2FACrypto.js';
+import totpRoutes from "./routes/twoFactorAuthRoutes.js";
+import * as totpCrypto from './utils/twoFactorAuthCrypto.js';
 
 dotenv.config();
 totpCrypto.setCryptoKey(process.env.CRYPTO_SECRET);

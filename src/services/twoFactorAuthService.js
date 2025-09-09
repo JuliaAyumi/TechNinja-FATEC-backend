@@ -1,5 +1,5 @@
 import { authenticator } from 'otplib';
-import { encrypt, decrypt } from '../utils/2FACrypto.js';
+import { encrypt, decrypt } from '../utils/twoFactorAuthCrypto.js';
 import User from '../models/User.js';
 
 authenticator.options = {
@@ -35,7 +35,6 @@ export const verifyToken = async (token, email) => {
 
   try {
     const decryptedSecret = decrypt(user.secret);
-    console.log(decryptedSecret);
 
     // verifica se o token é válido
     const valid = authenticator.check(token, decryptedSecret);
