@@ -36,5 +36,4 @@ function logTime(message) {
 // Inicializar o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando em ${process.env.NODE_ENV === 'production' ? `https://techninjabackend-d9ff0d7afc03.herokuapp.com` : `http://localhost:${PORT}`}`);
-  logTime('hora atual')
 });
