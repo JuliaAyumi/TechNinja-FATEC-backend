@@ -4,7 +4,7 @@
 Sistema que visa oferecer uma plataforma educacional interativa para usuários interessados em aprender programação através de quizzes.
 
 <div align="center">
-  <img src="https://github.com/matheusduartedevs/3-semestre-projeto-integrador/assets/127058626/e70ded39-9a2b-415f-8725-e6ac5ef8df0d" alt='LogoWhite' />
+  <img width="655" height="565" alt="LogoWhite" src="https://github.com/user-attachments/assets/c9b541a2-5bb6-4206-a174-e6edbe58b0d1" />
 </div>
 
 ### Time de Desenvolvimento
